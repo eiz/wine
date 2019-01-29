@@ -76,7 +76,8 @@ AddReg=\
     Timezones,\
     VersionInfo,\
     LicenseInformation, \
-    SteamClient
+    SteamClient, \
+    DotNet
 
 [DefaultInstall.ntamd64]
 RegisterDlls=RegisterDllsSection
@@ -105,7 +106,8 @@ AddReg=\
     Timezones,\
     VersionInfo.ntamd64,\
     LicenseInformation, \
-    SteamClient.ntamd64
+    SteamClient.ntamd64, \
+    DotNet.ntamd64
 
 [Wow64Install]
 RegisterDlls=RegisterDllsSection
@@ -121,7 +123,8 @@ AddReg=\
     Tapi,\
     VersionInfo.ntamd64,\
     LicenseInformation, \
-    SteamClient.ntamd64
+    SteamClient.ntamd64, \
+    DotNet.ntamd64
 
 [DefaultInstall.Services]
 AddService=BITS,0,BITSService
@@ -3596,3 +3599,10 @@ HKCU,Software\Wine\DllOverrides,"msvcr140",0x2,"native,builtin"
 HKCU,Software\Wine\DllOverrides,"ucrtbase",0x2,"native,builtin"
 HKCU,Software\Wine\DllOverrides,"vcomp140",0x2,"native,builtin"
 HKCU,Software\Wine\DllOverrides,"vcruntime140",0x2,"native,builtin"
+
+[DotNet]
+HKLM,SOFTWARE\Microsoft\.NETFramework,"InstallRoot",2,"%10%\Microsoft.NET\Framework"
+
+[DotNet.ntamd64]
+HKLM,SOFTWARE\Microsoft\.NETFramework,"InstallRoot",2,"%10%\Microsoft.NET\Framework64"
+HKLM,SOFTWARE\WOW6432Node\Microsoft\.NETFramework,"InstallRoot",2,"%10%\Microsoft.NET\Framework"

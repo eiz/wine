@@ -229,6 +229,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
         return FALSE;  /* prefer native version */
     case DLL_PROCESS_ATTACH:
         runtimehost_init();
+        mscoree_operations_init();
         DisableThreadLibraryCalls(hinstDLL);
         break;
     case DLL_PROCESS_DETACH:
@@ -846,4 +847,10 @@ void WINAPI ND_CopyObjDst( const void *src, void *dst, INT offset, INT size )
 void WINAPI ND_CopyObjSrc( const void *src, INT offset, void *dst, INT size )
 {
     memcpy( dst, (const BYTE *)src + offset, size );
+}
+
+int WINAPI CloseCtrs(HMODULE module)
+{
+    FIXME("stub.\n");
+    return 0;
 }

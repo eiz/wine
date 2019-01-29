@@ -21,6 +21,7 @@ import "unknwn.idl";
 cpp_quote("/* FIXME: #include <gcghost.h> */")
 cpp_quote("/* FIXME: #include <ivalidator.h> */")
 
+cpp_quote("__int32     WINAPI _CorExeMain(void);")
 cpp_quote("HRESULT     WINAPI CorBindToRuntimeHost(LPCWSTR,LPCWSTR,LPCWSTR,VOID*,DWORD,REFCLSID,REFIID,LPVOID*);")
 cpp_quote("void        WINAPI CorExitProcess(int);")
 cpp_quote("HRESULT     WINAPI GetCORSystemDirectory(LPWSTR,DWORD,DWORD*);")

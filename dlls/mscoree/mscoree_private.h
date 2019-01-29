@@ -196,4 +196,60 @@ extern HRESULT get_file_from_strongname(WCHAR* stringnameW, WCHAR* assemblies_pa
 extern void runtimehost_init(void) DECLSPEC_HIDDEN;
 extern void runtimehost_uninit(void) DECLSPEC_HIDDEN;
 
+typedef struct {
+    void (WINAPI *LoadStringRC)(LONG, PVOID, LONG, LONG);
+    HRESULT (WINAPI *CreateObject)(REFIID, PVOID *);
+    HRESULT (WINAPI *CloseCtrs)(PVOID);
+    void (WINAPI *CLRCreateInstance)(PVOID, PVOID, PVOID);
+    void (WINAPI *ClrCreateManagedInstance)(LPWSTR, PVOID, PVOID);
+    void (WINAPI *CoEEShutDownCOM)(void);
+    void (WINAPI *CoInitializeCor)(LONG);
+    void (WINAPI *CorBindToCurrentRuntime)(LPWSTR, PVOID, PVOID, PVOID);
+    void (WINAPI *CorBindToRuntimeEx)(LPWSTR, LPWSTR, LONG, PVOID, PVOID, PVOID);
+    void (WINAPI *CorBindToRuntimeHost)(LPWSTR, LPWSTR, LPWSTR, PVOID, LONG, PVOID, PVOID, PVOID);
+    void (WINAPI *CorExitProcess)(LONG);
+    void (WINAPI *CorIsLatestSvc)(PVOID, PVOID);
+    void (WINAPI *CreateConfigStream)(LPWSTR, PVOID);
+    void (WINAPI *CreateDebuggingInterfaceFromVersion)(LONG, LPWSTR, PVOID);
+    void (WINAPI *CreateInterface)(PVOID, PVOID, PVOID);
+    void (WINAPI *DllCanUnloadNow)(void);
+    void (WINAPI *DllGetClassObject)(PVOID, PVOID, PVOID);
+    void (WINAPI *DllRegisterServer)(void);
+    void (WINAPI *DllUnregisterServer)(void);
+    void (WINAPI *GetAssemblyMDImport)(LPWSTR, PVOID, PVOID);
+    void (WINAPI *GetCORSystemDirectory)(PVOID, LONG, PVOID);
+    void (WINAPI *GetCORVersion)(PVOID, LONG, PVOID);
+    void (WINAPI *GetFileVersion)(LPWSTR, PVOID, LONG, PVOID);
+    PVOID (WINAPI *GetProcessExecutableHeap)(void);
+    void (WINAPI *GetRealProcAddress)(LPSTR, PVOID);
+    void (WINAPI *GetRequestedRuntimeInfo)(LPWSTR, LPWSTR, LPWSTR, LONG, LONG, PVOID, LONG, PVOID, PVOID, LONG, PVOID);
+    void (WINAPI *GetRequestedRuntimeVersion)(LPWSTR, PVOID, LONG, LPSTR);
+    void (WINAPI *GetVersionFromProcess)(PVOID, PVOID, LONG, PVOID);
+    void (WINAPI *LoadLibraryShim)(LPWSTR, LPWSTR, PVOID, PVOID);
+    void (WINAPI *LoadStringRCEx)(LONG, LONG, PVOID, LONG, LONG, PVOID);
+    void (WINAPI *LockClrVersion)(PVOID, PVOID, PVOID);
+    void (WINAPI *ND_CopyObjDst)(PVOID, PVOID, LONG, LONG);
+    void (WINAPI *ND_CopyObjSrc)(PVOID, LONG, PVOID, LONG);
+    void (WINAPI *ND_RI2)(PVOID, LONG);
+    void (WINAPI *ND_RI4)(PVOID, LONG);
+    void (WINAPI *ND_RI8)(PVOID, LONG);
+    void (WINAPI *ND_RU1)(PVOID, LONG);
+    void (WINAPI *ND_WI2)(PVOID, LONG, LONG);
+    void (WINAPI *ND_WI4)(PVOID, LONG, LONG);
+    void (WINAPI *ND_WI8)(PVOID, LONG, LONGLONG);
+    void (WINAPI *ND_WU1)(PVOID, LONG, LONG);
+    void (WINAPI *StrongNameSignatureVerification)(LPWSTR, LONG, PVOID);
+    void (WINAPI *StrongNameSignatureVerificationEx)(LPWSTR, LONG, PVOID);
+    void (WINAPI *_CorDllMain)(LONG, LONG, PVOID);
+    void (WINAPI *_CorExeMain2)(PVOID, LONG, PVOID, PVOID, PVOID);
+    __int32 (WINAPI *_CorExeMain)(void);
+} mscoree_operations;
+
+extern void mscoree_operations_init(void) DECLSPEC_HIDDEN;
+extern mscoree_operations *mscoree_get_ops(void) DECLSPEC_HIDDEN;
+
+extern HRESULT WINAPI cormono_CreateObject(REFIID riid, void **ppv) DECLSPEC_HIDDEN;
+extern PVOID WINAPI cormono_GetProcessExecutableHeap(void);
+extern __int32 WINAPI cormono__CorExeMain(void) DECLSPEC_HIDDEN;
+
 #endif   /* __MSCOREE_PRIVATE__ */

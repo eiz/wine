@@ -4,9 +4,10 @@
 20 stub UpdateError
 22 stdcall LoadStringRC(long ptr long long)
 23 stub ReOpenMetaDataWithMemory
+24 stdcall CreateObject(ptr ptr)
 
 @ stub CallFunctionShim
-@ stub CloseCtrs
+@ stdcall CloseCtrs(ptr)
 @ stdcall CLRCreateInstance(ptr ptr ptr)
 @ stdcall ClrCreateManagedInstance(wstr ptr ptr)
 @ stdcall CoEEShutDownCOM()
@@ -57,7 +58,7 @@
 @ stub GetMetaDataPublicInterfaceFromInternal
 @ stub GetPermissionRequests
 @ stub GetPrivateContextsPerfCounters
-@ stub GetProcessExecutableHeap
+@ stdcall GetProcessExecutableHeap()
 @ stdcall GetRealProcAddress(str ptr)
 @ stdcall GetRequestedRuntimeInfo(wstr wstr wstr long long ptr long ptr ptr long ptr)
 @ stdcall GetRequestedRuntimeVersion(wstr ptr long ptr)

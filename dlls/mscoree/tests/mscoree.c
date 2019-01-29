@@ -29,6 +29,7 @@
 #include "wine/test.h"
 
 DEFINE_GUID(IID__AppDomain, 0x05f696dc,0x2b29,0x3663,0xad,0x8b,0xc4,0x38,0x9c,0xf2,0xa7,0x13);
+DEFINE_GUID(IID_IUndocumentedClrIface, 0xf4d25df3,0xe9b3,0x439c,0x8b,0x2b,0xc8,0x14,0xe3,0x6f,0x94,0x04);
 
 static const WCHAR v4_0[] = {'v','4','.','0','.','3','0','3','1','9',0};
 
@@ -42,6 +43,7 @@ static HRESULT (WINAPI *pLoadLibraryShim)(LPCWSTR, LPCWSTR, LPVOID, HMODULE*);
 static HRESULT (WINAPI *pCreateConfigStream)(LPCWSTR, IStream**);
 static HRESULT (WINAPI *pCreateInterface)(REFCLSID, REFIID, VOID**);
 static HRESULT (WINAPI *pCLRCreateInstance)(REFCLSID, REFIID, VOID**);
+static HRESULT (WINAPI *pCreateObject)(REFIID, VOID*);
 
 static BOOL no_legacy_runtimes;
 
@@ -63,6 +65,7 @@ static BOOL init_functionpointers(void)
     pCreateConfigStream = (void *)GetProcAddress(hmscoree, "CreateConfigStream");
     pCreateInterface =  (void *)GetProcAddress(hmscoree, "CreateInterface");
     pCLRCreateInstance = (void *)GetProcAddress(hmscoree, "CLRCreateInstance");
+    pCreateObject = (void *)GetProcAddress(hmscoree, (LPCSTR)24);
 
     if (!pGetCORVersion || !pGetCORSystemDirectory || !pGetRequestedRuntimeInfo || !pLoadLibraryShim ||
         !pCreateInterface || !pCLRCreateInstance || !pCorIsLatestSvc
@@ -532,6 +535,17 @@ static void test_createinstance(void)
     }
 }
 
+static void test_createobject(void)
+{
+    HRESULT hr;
+    IUnknown *obj = NULL;
+
+    hr = pCreateObject(&IID_IUndocumentedClrIface, &obj);
+    ok(SUCCEEDED(hr), "Failed to create undocumented clr interface, hr=%x", hr);
+    ok(obj != NULL, "Expected non-NULL undocumented CLR interface");
+    IUnknown_Release(obj);
+}
+
 static void test_createdomain(void)
 {
     static const WCHAR test_name[] = {'t','e','s','t',0};
@@ -638,6 +652,7 @@ START_TEST(mscoree)
     test_loadlibraryshim();
     test_createconfigstream();
     test_createinstance();
+    test_createobject();
 
     if (runtime_is_usable())
     {

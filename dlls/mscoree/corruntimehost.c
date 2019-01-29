@@ -1396,7 +1396,20 @@ static void FixupVTable(HMODULE hmodule)
         ERR("failed to read CLR headers, hr=%x\n", hr);
 }
 
-__int32 WINAPI _CorExeMain(void)
+
+HRESULT WINAPI cormono_CreateObject(REFIID riid, void **ppv)
+{
+    FIXME("stub\n");
+    return E_FAIL;
+}
+
+PVOID WINAPI cormono_GetProcessExecutableHeap(void)
+{
+    FIXME("stub\n");
+    return NULL;
+}
+
+__int32 WINAPI cormono__CorExeMain(void)
 {
     int exit_code;
     int argc;
