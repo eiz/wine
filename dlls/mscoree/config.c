@@ -217,7 +217,7 @@ static const IStreamVtbl ConfigStreamVtbl = {
   ConfigStream_Clone
 };
 
-HRESULT WINAPI CreateConfigStream(const WCHAR *filename, IStream **stream)
+HRESULT WINAPI cormono_CreateConfigStream(const WCHAR *filename, IStream **stream)
 {
     ConfigStream *config_stream;
     HANDLE file;
@@ -660,7 +660,7 @@ HRESULT parse_config_file(LPCWSTR filename, parsed_config_file *result)
     init_config(result);
 
 
-    hr = CreateConfigStream(filename, &stream);
+    hr = mscoree_get_ops()->CreateConfigStream(filename, &stream);
     if (FAILED(hr))
         return hr;
 

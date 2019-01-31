@@ -7,7 +7,7 @@
 24 stdcall CreateObject(ptr ptr)
 
 @ stub CallFunctionShim
-@ stdcall CloseCtrs(ptr)
+@ stdcall CloseCtrs()
 @ stdcall CLRCreateInstance(ptr ptr ptr)
 @ stdcall ClrCreateManagedInstance(wstr ptr ptr)
 @ stdcall CoEEShutDownCOM()
@@ -15,7 +15,7 @@
 @ stub CoInitializeEE
 @ stub CoUninitializeCor
 @ stub CoUninitializeEE
-@ stub CollectCtrs
+@ stdcall CollectCtrs(ptr ptr ptr ptr)
 @ stdcall CorBindToCurrentRuntime(wstr ptr ptr ptr)
 @ stub CorBindToRuntime
 @ stub CorBindToRuntimeByCfg
@@ -85,7 +85,7 @@
 @ stdcall ND_WI4(ptr long long)
 @ stdcall ND_WI8(ptr long int64)
 @ stdcall ND_WU1(ptr long long)
-@ stub OpenCtrs
+@ stdcall OpenCtrs(ptr)
 @ stub ReOpenMetaDataWithMemoryEx
 @ stub RunDll@ShimW
 @ stub RuntimeOSHandle

@@ -191,10 +191,10 @@ static const struct IClassFactoryVtbl mscorecf_vtbl =
     mscorecf_LockServer
 };
 
-HRESULT WINAPI CorBindToRuntimeHost(LPCWSTR pwszVersion, LPCWSTR pwszBuildFlavor,
-                                    LPCWSTR pwszHostConfigFile, VOID *pReserved,
-                                    DWORD startupFlags, REFCLSID rclsid,
-                                    REFIID riid, LPVOID *ppv)
+HRESULT WINAPI cormono_CorBindToRuntimeHost(LPCWSTR pwszVersion, LPCWSTR pwszBuildFlavor,
+                                            LPCWSTR pwszHostConfigFile, VOID *pReserved,
+                                            DWORD startupFlags, REFCLSID rclsid,
+                                            REFIID riid, LPVOID *ppv)
 {
     HRESULT ret;
     ICLRRuntimeInfo *info;
@@ -248,7 +248,7 @@ __int32 WINAPI _CorExeMain2(PBYTE ptrMemory, DWORD cntMemory, LPWSTR imageName, 
     return -1;
 }
 
-void WINAPI CorExitProcess(int exitCode)
+void WINAPI cormono_CorExitProcess(int exitCode)
 {
     TRACE("(%x)\n", exitCode);
     CLRMetaHost_ExitProcess(0, exitCode);
@@ -265,7 +265,7 @@ HRESULT WINAPI _CorValidateImage(PVOID* imageBase, LPCWSTR imageName)
     return E_FAIL;
 }
 
-HRESULT WINAPI GetCORSystemDirectory(LPWSTR pbuffer, DWORD cchBuffer, DWORD *dwLength)
+HRESULT WINAPI cormono_GetCORSystemDirectory(LPWSTR pbuffer, DWORD cchBuffer, DWORD *dwLength)
 {
     ICLRRuntimeInfo *info;
     HRESULT ret;
@@ -288,7 +288,7 @@ HRESULT WINAPI GetCORSystemDirectory(LPWSTR pbuffer, DWORD cchBuffer, DWORD *dwL
     return ret;
 }
 
-HRESULT WINAPI GetCORVersion(LPWSTR pbuffer, DWORD cchBuffer, DWORD *dwLength)
+HRESULT WINAPI cormono_GetCORVersion(LPWSTR pbuffer, DWORD cchBuffer, DWORD *dwLength)
 {
     ICLRRuntimeInfo *info;
     HRESULT ret;
@@ -311,7 +311,7 @@ HRESULT WINAPI GetCORVersion(LPWSTR pbuffer, DWORD cchBuffer, DWORD *dwLength)
     return ret;
 }
 
-HRESULT WINAPI CorIsLatestSvc(int *unk1, int *unk2)
+HRESULT WINAPI cormono_CorIsLatestSvc(int *unk1, int *unk2)
 {
     ERR_(winediag)("If this function is called, it is likely the result of a broken .NET installation\n");
 
@@ -321,7 +321,7 @@ HRESULT WINAPI CorIsLatestSvc(int *unk1, int *unk2)
     return S_OK;
 }
 
-HRESULT WINAPI GetRequestedRuntimeInfo(LPCWSTR pExe, LPCWSTR pwszVersion, LPCWSTR pConfigurationFile,
+HRESULT WINAPI cormono_GetRequestedRuntimeInfo(LPCWSTR pExe, LPCWSTR pwszVersion, LPCWSTR pConfigurationFile,
     DWORD startupFlags, DWORD runtimeInfoFlags, LPWSTR pDirectory, DWORD dwDirectory, DWORD *dwDirectoryLength,
     LPWSTR pVersion, DWORD cchBuffer, DWORD *dwlength)
 {
@@ -359,7 +359,7 @@ HRESULT WINAPI GetRequestedRuntimeInfo(LPCWSTR pExe, LPCWSTR pwszVersion, LPCWST
     return ret;
 }
 
-HRESULT WINAPI GetRequestedRuntimeVersion(LPWSTR pExe, LPWSTR pVersion, DWORD cchBuffer, DWORD *dwlength)
+HRESULT WINAPI cormono_GetRequestedRuntimeVersion(LPWSTR pExe, LPWSTR pVersion, DWORD cchBuffer, DWORD *dwlength)
 {
     TRACE("(%s, %p, %d, %p)\n", debugstr_w(pExe), pVersion, cchBuffer, dwlength);
 
@@ -369,13 +369,13 @@ HRESULT WINAPI GetRequestedRuntimeVersion(LPWSTR pExe, LPWSTR pVersion, DWORD cc
     return GetRequestedRuntimeInfo(pExe, NULL, NULL, 0, 0, NULL, 0, NULL, pVersion, cchBuffer, dwlength);
 }
 
-HRESULT WINAPI GetRealProcAddress(LPCSTR procname, void **ppv)
+HRESULT WINAPI cormono_GetRealProcAddress(LPCSTR procname, void **ppv)
 {
     FIXME("(%s, %p)\n", debugstr_a(procname), ppv);
     return CLR_E_SHIM_RUNTIMEEXPORT;
 }
 
-HRESULT WINAPI GetFileVersion(LPCWSTR szFilename, LPWSTR szBuffer, DWORD cchBuffer, DWORD *dwLength)
+HRESULT WINAPI cormono_GetFileVersion(LPCWSTR szFilename, LPWSTR szBuffer, DWORD cchBuffer, DWORD *dwLength)
 {
     TRACE("(%s, %p, %d, %p)\n", debugstr_w(szFilename), szBuffer, cchBuffer, dwLength);
 
@@ -386,7 +386,7 @@ HRESULT WINAPI GetFileVersion(LPCWSTR szFilename, LPWSTR szBuffer, DWORD cchBuff
     return CLRMetaHost_GetVersionFromFile(0, szFilename, szBuffer, dwLength);
 }
 
-HRESULT WINAPI LoadLibraryShim( LPCWSTR szDllName, LPCWSTR szVersion, LPVOID pvReserved, HMODULE * phModDll)
+HRESULT WINAPI cormono_LoadLibraryShim( LPCWSTR szDllName, LPCWSTR szVersion, LPVOID pvReserved, HMODULE * phModDll)
 {
     HRESULT ret=S_OK;
     WCHAR dll_filename[MAX_PATH];
@@ -426,31 +426,31 @@ HRESULT WINAPI LoadLibraryShim( LPCWSTR szDllName, LPCWSTR szVersion, LPVOID pvR
     return *phModDll ? S_OK : E_HANDLE;
 }
 
-HRESULT WINAPI LockClrVersion(FLockClrVersionCallback hostCallback, FLockClrVersionCallback *pBeginHostSetup, FLockClrVersionCallback *pEndHostSetup)
+HRESULT WINAPI cormono_LockClrVersion(FLockClrVersionCallback hostCallback, FLockClrVersionCallback *pBeginHostSetup, FLockClrVersionCallback *pEndHostSetup)
 {
     FIXME("(%p %p %p): stub\n", hostCallback, pBeginHostSetup, pEndHostSetup);
     return S_OK;
 }
 
-HRESULT WINAPI CoInitializeCor(DWORD fFlags)
+HRESULT WINAPI cormono_CoInitializeCor(DWORD fFlags)
 {
     FIXME("(0x%08x): stub\n", fFlags);
     return S_OK;
 }
 
-HRESULT WINAPI GetAssemblyMDImport(LPCWSTR szFileName, REFIID riid, IUnknown **ppIUnk)
+HRESULT WINAPI cormono_GetAssemblyMDImport(LPCWSTR szFileName, REFIID riid, IUnknown **ppIUnk)
 {
     FIXME("(%p %s, %s, %p): stub\n", szFileName, debugstr_w(szFileName), debugstr_guid(riid), *ppIUnk);
     return ERROR_CALL_NOT_IMPLEMENTED;
 }
 
-HRESULT WINAPI GetVersionFromProcess(HANDLE hProcess, LPWSTR pVersion, DWORD cchBuffer, DWORD *dwLength)
+HRESULT WINAPI cormono_GetVersionFromProcess(HANDLE hProcess, LPWSTR pVersion, DWORD cchBuffer, DWORD *dwLength)
 {
     FIXME("(%p, %p, %d, %p): stub\n", hProcess, pVersion, cchBuffer, dwLength);
     return E_NOTIMPL;
 }
 
-HRESULT WINAPI LoadStringRCEx(LCID culture, UINT resId, LPWSTR pBuffer, int iBufLen, int bQuiet, int* pBufLen)
+HRESULT WINAPI cormono_LoadStringRCEx(LCID culture, UINT resId, LPWSTR pBuffer, int iBufLen, int bQuiet, int* pBufLen)
 {
     HRESULT res = S_OK;
     if ((iBufLen <= 0) || !pBuffer)
@@ -467,13 +467,14 @@ HRESULT WINAPI LoadStringRCEx(LCID culture, UINT resId, LPWSTR pBuffer, int iBuf
     return res;
 }
 
-HRESULT WINAPI LoadStringRC(UINT resId, LPWSTR pBuffer, int iBufLen, int bQuiet)
+HRESULT WINAPI cormono_LoadStringRC(UINT resId, LPWSTR pBuffer, int iBufLen, int bQuiet)
 {
-    return LoadStringRCEx(-1, resId, pBuffer, iBufLen, bQuiet, NULL);
+    return mscoree_get_ops()->LoadStringRCEx(
+        -1, resId, pBuffer, iBufLen, bQuiet, NULL);
 }
 
-HRESULT WINAPI CorBindToRuntimeEx(LPWSTR szVersion, LPWSTR szBuildFlavor, DWORD nflags, REFCLSID rslsid,
-                                  REFIID riid, LPVOID *ppv)
+HRESULT WINAPI cormono_CorBindToRuntimeEx(LPWSTR szVersion, LPWSTR szBuildFlavor, DWORD nflags, REFCLSID rslsid,
+                                          REFIID riid, LPVOID *ppv)
 {
     HRESULT ret;
     ICLRRuntimeInfo *info;
@@ -495,7 +496,7 @@ HRESULT WINAPI CorBindToRuntimeEx(LPWSTR szVersion, LPWSTR szBuildFlavor, DWORD 
     return ret;
 }
 
-HRESULT WINAPI CorBindToCurrentRuntime(LPCWSTR filename, REFCLSID rclsid, REFIID riid, LPVOID *ppv)
+HRESULT WINAPI cormono_CorBindToCurrentRuntime(LPCWSTR filename, REFCLSID rclsid, REFIID riid, LPVOID *ppv)
 {
     HRESULT ret;
     ICLRRuntimeInfo *info;
@@ -516,7 +517,8 @@ HRESULT WINAPI CorBindToCurrentRuntime(LPCWSTR filename, REFCLSID rclsid, REFIID
     return ret;
 }
 
-STDAPI ClrCreateManagedInstance(LPCWSTR pTypeName, REFIID riid, void **ppObject)
+STDAPI cormono_ClrCreateManagedInstance(
+    LPCWSTR pTypeName, REFIID riid, void **ppObject)
 {
     HRESULT ret;
     ICLRRuntimeInfo *info;
@@ -563,7 +565,7 @@ BOOL WINAPI StrongNameSignatureVerificationEx(LPCWSTR filename, BOOL forceVerifi
     return FALSE;
 }
 
-HRESULT WINAPI CreateDebuggingInterfaceFromVersion(int nDebugVersion, LPCWSTR version, IUnknown **ppv)
+HRESULT WINAPI cormono_CreateDebuggingInterfaceFromVersion(int nDebugVersion, LPCWSTR version, IUnknown **ppv)
 {
     const WCHAR v2_0[] = {'v','2','.','0','.','5','0','7','2','7',0};
     HRESULT hr = E_FAIL;
@@ -602,7 +604,7 @@ HRESULT WINAPI CreateDebuggingInterfaceFromVersion(int nDebugVersion, LPCWSTR ve
     return hr;
 }
 
-HRESULT WINAPI CLRCreateInstance(REFCLSID clsid, REFIID riid, LPVOID *ppInterface)
+HRESULT WINAPI cormono_CLRCreateInstance(REFCLSID clsid, REFIID riid, LPVOID *ppInterface)
 {
     TRACE("(%s,%s,%p)\n", debugstr_guid(clsid), debugstr_guid(riid), ppInterface);
 
@@ -616,14 +618,15 @@ HRESULT WINAPI CLRCreateInstance(REFCLSID clsid, REFIID riid, LPVOID *ppInterfac
     return CLASS_E_CLASSNOTAVAILABLE;
 }
 
-HRESULT WINAPI CreateInterface(REFCLSID clsid, REFIID riid, LPVOID *ppInterface)
+HRESULT WINAPI cormono_CreateInterface(
+    REFCLSID clsid, REFIID riid, LPVOID *ppInterface)
 {
     TRACE("(%s,%s,%p)\n", debugstr_guid(clsid), debugstr_guid(riid), ppInterface);
 
     return CLRCreateInstance(clsid, riid, ppInterface);
 }
 
-HRESULT WINAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppv)
+HRESULT WINAPI cormono_DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppv)
 {
     mscorecf *This;
     HRESULT hr;
@@ -777,24 +780,24 @@ static BOOL install_wine_mono(void)
     return ret;
 }
 
-HRESULT WINAPI DllRegisterServer(void)
+HRESULT WINAPI cormono_DllRegisterServer(void)
 {
     /*install_wine_mono();*/
 
     return __wine_register_resources( MSCOREE_hInstance );
 }
 
-HRESULT WINAPI DllUnregisterServer(void)
+HRESULT WINAPI cormono_DllUnregisterServer(void)
 {
     return __wine_unregister_resources( MSCOREE_hInstance );
 }
 
-HRESULT WINAPI DllCanUnloadNow(VOID)
+HRESULT WINAPI cormono_DllCanUnloadNow(VOID)
 {
     return S_FALSE;
 }
 
-void WINAPI CoEEShutDownCOM(void)
+void WINAPI cormono_CoEEShutDownCOM(void)
 {
     FIXME("stub.\n");
 }
@@ -849,8 +852,22 @@ void WINAPI ND_CopyObjSrc( const void *src, INT offset, void *dst, INT size )
     memcpy( dst, (const BYTE *)src + offset, size );
 }
 
-int WINAPI CloseCtrs(HMODULE module)
+DWORD WINAPI cormono_OpenCtrs(LPWSTR pContext)
 {
     FIXME("stub.\n");
-    return 0;
+    return ERROR_NOT_SUPPORTED;
 }
+
+DWORD WINAPI cormono_CollectCtrs(
+    LPWSTR pQuery, LPVOID *ppData, LPDWORD pcbData, LPDWORD pObjectsReturned)
+{
+    FIXME("stub.\n");
+    return ERROR_NOT_SUPPORTED;
+}
+
+DWORD WINAPI cormono_CloseCtrs(void)
+{
+    FIXME("stub.\n");
+    return ERROR_NOT_SUPPORTED;
+}
+

@@ -197,37 +197,49 @@ extern void runtimehost_init(void) DECLSPEC_HIDDEN;
 extern void runtimehost_uninit(void) DECLSPEC_HIDDEN;
 
 typedef struct {
-    void (WINAPI *LoadStringRC)(LONG, PVOID, LONG, LONG);
+    HRESULT (WINAPI *LoadStringRC)(UINT, LPWSTR, int, int);
     HRESULT (WINAPI *CreateObject)(REFIID, PVOID *);
-    HRESULT (WINAPI *CloseCtrs)(PVOID);
-    void (WINAPI *CLRCreateInstance)(PVOID, PVOID, PVOID);
-    void (WINAPI *ClrCreateManagedInstance)(LPWSTR, PVOID, PVOID);
+    DWORD (WINAPI *OpenCtrs)(LPWSTR);
+    DWORD (WINAPI *CollectCtrs)(LPWSTR, LPVOID *, LPDWORD, LPDWORD);
+    DWORD (WINAPI *CloseCtrs)(void);
+    HRESULT (WINAPI *CLRCreateInstance)(REFCLSID, REFIID, LPVOID *);
+    HRESULT (WINAPI *ClrCreateManagedInstance)(LPCWSTR, REFIID, void **);
     void (WINAPI *CoEEShutDownCOM)(void);
-    void (WINAPI *CoInitializeCor)(LONG);
-    void (WINAPI *CorBindToCurrentRuntime)(LPWSTR, PVOID, PVOID, PVOID);
-    void (WINAPI *CorBindToRuntimeEx)(LPWSTR, LPWSTR, LONG, PVOID, PVOID, PVOID);
-    void (WINAPI *CorBindToRuntimeHost)(LPWSTR, LPWSTR, LPWSTR, PVOID, LONG, PVOID, PVOID, PVOID);
-    void (WINAPI *CorExitProcess)(LONG);
-    void (WINAPI *CorIsLatestSvc)(PVOID, PVOID);
-    void (WINAPI *CreateConfigStream)(LPWSTR, PVOID);
-    void (WINAPI *CreateDebuggingInterfaceFromVersion)(LONG, LPWSTR, PVOID);
-    void (WINAPI *CreateInterface)(PVOID, PVOID, PVOID);
-    void (WINAPI *DllCanUnloadNow)(void);
-    void (WINAPI *DllGetClassObject)(PVOID, PVOID, PVOID);
-    void (WINAPI *DllRegisterServer)(void);
-    void (WINAPI *DllUnregisterServer)(void);
-    void (WINAPI *GetAssemblyMDImport)(LPWSTR, PVOID, PVOID);
-    void (WINAPI *GetCORSystemDirectory)(PVOID, LONG, PVOID);
-    void (WINAPI *GetCORVersion)(PVOID, LONG, PVOID);
-    void (WINAPI *GetFileVersion)(LPWSTR, PVOID, LONG, PVOID);
+    HRESULT (WINAPI *CoInitializeCor)(DWORD);
+    HRESULT (WINAPI *CorBindToCurrentRuntime)(
+        LPCWSTR, REFCLSID, REFIID, LPVOID *);
+    HRESULT (WINAPI *CorBindToRuntimeEx)(
+        LPWSTR, LPWSTR, DWORD, REFCLSID, REFIID, LPVOID*);
+    HRESULT (WINAPI *CorBindToRuntimeHost)(
+        LPCWSTR, LPCWSTR, LPCWSTR, PVOID, DWORD, REFCLSID, REFIID, LPVOID *);
+    void (WINAPI *CorExitProcess)(int);
+    HRESULT (WINAPI *CorIsLatestSvc)(int *, int *);
+    HRESULT (WINAPI *CreateConfigStream)(const WCHAR *, IStream **);
+    HRESULT (WINAPI *CreateDebuggingInterfaceFromVersion)(
+        int, LPCWSTR, IUnknown **);
+    HRESULT (WINAPI *CreateInterface)(REFCLSID, REFIID, LPVOID *);
+    HRESULT (WINAPI *DllCanUnloadNow)(void);
+    HRESULT (WINAPI *DllGetClassObject)(REFCLSID, REFIID, LPVOID *);
+    HRESULT (WINAPI *DllRegisterServer)(void);
+    HRESULT (WINAPI *DllUnregisterServer)(void);
+    HRESULT (WINAPI *GetAssemblyMDImport)(LPCWSTR, REFIID, IUnknown **);
+    HRESULT (WINAPI *GetCORSystemDirectory)(LPWSTR, DWORD, DWORD *);
+    HRESULT (WINAPI *GetCORVersion)(LPWSTR, DWORD, DWORD *);
+    HRESULT (WINAPI *GetFileVersion)(LPCWSTR, LPWSTR, DWORD, DWORD *);
     PVOID (WINAPI *GetProcessExecutableHeap)(void);
-    void (WINAPI *GetRealProcAddress)(LPSTR, PVOID);
-    void (WINAPI *GetRequestedRuntimeInfo)(LPWSTR, LPWSTR, LPWSTR, LONG, LONG, PVOID, LONG, PVOID, PVOID, LONG, PVOID);
-    void (WINAPI *GetRequestedRuntimeVersion)(LPWSTR, PVOID, LONG, LPSTR);
-    void (WINAPI *GetVersionFromProcess)(PVOID, PVOID, LONG, PVOID);
-    void (WINAPI *LoadLibraryShim)(LPWSTR, LPWSTR, PVOID, PVOID);
-    void (WINAPI *LoadStringRCEx)(LONG, LONG, PVOID, LONG, LONG, PVOID);
-    void (WINAPI *LockClrVersion)(PVOID, PVOID, PVOID);
+    HRESULT (WINAPI *GetRealProcAddress)(LPCSTR, PVOID *);
+    HRESULT (WINAPI *GetRequestedRuntimeInfo)(
+        LPCWSTR, LPCWSTR, LPCWSTR, DWORD, DWORD, LPWSTR, DWORD, DWORD *,
+        LPWSTR, DWORD, DWORD *);
+    HRESULT (WINAPI *GetRequestedRuntimeVersion)(
+        LPWSTR, LPWSTR, DWORD, DWORD *);
+    HRESULT (WINAPI *GetVersionFromProcess)(HANDLE, LPWSTR, DWORD, DWORD *);
+    HRESULT (WINAPI *LoadLibraryShim)(LPCWSTR, LPCWSTR, LPVOID, HMODULE *);
+    HRESULT (WINAPI *LoadStringRCEx)(LCID, UINT, LPWSTR, int, int, int *);
+    HRESULT (WINAPI *LockClrVersion)(
+        FLockClrVersionCallback,
+        FLockClrVersionCallback *,
+        FLockClrVersionCallback *);
     void (WINAPI *ND_CopyObjDst)(PVOID, PVOID, LONG, LONG);
     void (WINAPI *ND_CopyObjSrc)(PVOID, LONG, PVOID, LONG);
     void (WINAPI *ND_RI2)(PVOID, LONG);
@@ -248,8 +260,79 @@ typedef struct {
 extern void mscoree_operations_init(void) DECLSPEC_HIDDEN;
 extern mscoree_operations *mscoree_get_ops(void) DECLSPEC_HIDDEN;
 
-extern HRESULT WINAPI cormono_CreateObject(REFIID riid, void **ppv) DECLSPEC_HIDDEN;
+extern HRESULT WINAPI cormono_LoadStringRC(
+    UINT resId, LPWSTR buffer, int iBufLen, int bQuiet) DECLSPEC_HIDDEN;
+extern HRESULT WINAPI cormono_CreateObject(
+    REFIID riid, void **ppv) DECLSPEC_HIDDEN;
+extern DWORD WINAPI cormono_OpenCtrs(LPWSTR pContext) DECLSPEC_HIDDEN;
+extern DWORD WINAPI cormono_CollectCtrs(
+    LPWSTR pQuery, LPVOID *ppData, LPDWORD pcbData,
+    LPDWORD pObjectsReturned) DECLSPEC_HIDDEN;
+extern DWORD WINAPI cormono_CloseCtrs(void) DECLSPEC_HIDDEN;
+extern HRESULT WINAPI cormono_CLRCreateInstance(
+    REFCLSID clsid, REFIID riid, LPVOID *ppInterface) DECLSPEC_HIDDEN;
+extern HRESULT WINAPI cormono_ClrCreateManagedInstance(
+    LPCWSTR pTypeName, REFIID riid, void **ppObject) DECLSPEC_HIDDEN;
+extern void WINAPI cormono_CoEEShutDownCOM(void) DECLSPEC_HIDDEN;
+extern HRESULT WINAPI cormono_CoInitializeCor(DWORD fFlags) DECLSPEC_HIDDEN;
+extern HRESULT WINAPI cormono_CorBindToCurrentRuntime(
+    LPCWSTR filename, REFCLSID rclsid, REFIID riid,
+    LPVOID *ppv) DECLSPEC_HIDDEN;
+extern HRESULT WINAPI cormono_CorBindToRuntimeEx(
+    LPWSTR szVersion, LPWSTR szBuildFlavor, DWORD nflags, REFCLSID rslsid,
+    REFIID riid, LPVOID *ppv) DECLSPEC_HIDDEN;
+extern HRESULT WINAPI cormono_CorBindToRuntimeHost(
+    LPCWSTR pwszVersion, LPCWSTR pwszBuildFlavor,
+    LPCWSTR pwszHostConfigFile, VOID *pReserved,
+    DWORD startupFlags, REFCLSID rclsid,
+    REFIID riid, LPVOID *ppv) DECLSPEC_HIDDEN;
+extern void WINAPI cormono_CorExitProcess(int exitCode) DECLSPEC_HIDDEN;
+extern HRESULT WINAPI cormono_CorIsLatestSvc(
+    int *unk1, int *unk2) DECLSPEC_HIDDEN;
+extern HRESULT WINAPI cormono_CreateConfigStream(
+    const WCHAR *filename, IStream **stream) DECLSPEC_HIDDEN;
+extern HRESULT WINAPI cormono_CreateDebuggingInterfaceFromVersion(
+    int nDebugVersion, LPCWSTR version, IUnknown **ppv) DECLSPEC_HIDDEN;
+extern HRESULT WINAPI cormono_CreateInterface(
+    REFCLSID clsid, REFIID riid, LPVOID *ppInterface) DECLSPEC_HIDDEN;
+extern HRESULT WINAPI cormono_DllCanUnloadNow(VOID) DECLSPEC_HIDDEN;
+extern HRESULT WINAPI cormono_DllGetClassObject(
+    REFCLSID rclsid, REFIID riid, LPVOID* ppv) DECLSPEC_HIDDEN;
+extern HRESULT WINAPI cormono_DllRegisterServer(void) DECLSPEC_HIDDEN;
+extern HRESULT WINAPI cormono_DllUnregisterServer(void) DECLSPEC_HIDDEN;
+extern HRESULT WINAPI cormono_GetAssemblyMDImport(
+    LPCWSTR szFileName, REFIID riid, IUnknown **ppIUnk) DECLSPEC_HIDDEN;
+extern HRESULT WINAPI cormono_GetCORSystemDirectory(
+    LPWSTR pbuffer, DWORD cchBuffer, DWORD *dwLength) DECLSPEC_HIDDEN;
+extern HRESULT WINAPI cormono_GetCORVersion(
+    LPWSTR pbuffer, DWORD cchBuffer, DWORD *dwLength) DECLSPEC_HIDDEN;
+extern HRESULT WINAPI cormono_GetFileVersion(
+    LPCWSTR szFilename, LPWSTR szBuffer, DWORD cchBuffer,
+    DWORD *dwLength) DECLSPEC_HIDDEN;
 extern PVOID WINAPI cormono_GetProcessExecutableHeap(void);
+extern HRESULT WINAPI cormono_GetRealProcAddress(
+    LPCSTR procname, void **ppv) DECLSPEC_HIDDEN;
+extern HRESULT WINAPI cormono_GetRequestedRuntimeInfo(
+    LPCWSTR pExe, LPCWSTR pwszVersion, LPCWSTR pConfigurationFile,
+    DWORD startupFlags, DWORD runtimeInfoFlags, LPWSTR pDirectory,
+    DWORD dwDirectory, DWORD *dwDirectoryLength, LPWSTR pVersion,
+    DWORD cchBuffer, DWORD *dwlength) DECLSPEC_HIDDEN;
+extern HRESULT WINAPI cormono_GetRequestedRuntimeVersion(
+    LPWSTR pExe, LPWSTR pVersion, DWORD cchBuffer,
+    DWORD *dwlength) DECLSPEC_HIDDEN;
+extern HRESULT WINAPI cormono_GetVersionFromProcess(
+    HANDLE hProcess, LPWSTR pVersion, DWORD cchBuffer,
+    DWORD *dwLength) DECLSPEC_HIDDEN;
+extern HRESULT WINAPI cormono_LoadLibraryShim(
+    LPCWSTR szDllName, LPCWSTR szVersion, LPVOID pvReserved,
+    HMODULE * phModDll) DECLSPEC_HIDDEN;
+extern HRESULT WINAPI cormono_LoadStringRCEx(
+    LCID culture, UINT resId, LPWSTR pBuffer,
+    int iBufLen, int bQuiet, int *pBufLen) DECLSPEC_HIDDEN;
+extern HRESULT WINAPI cormono_LockClrVersion(
+    FLockClrVersionCallback hostCallback,
+    FLockClrVersionCallback *pBeginHostSetup,
+    FLockClrVersionCallback *pEndHostSetup) DECLSPEC_HIDDEN;
 extern __int32 WINAPI cormono__CorExeMain(void) DECLSPEC_HIDDEN;
 
 #endif   /* __MSCOREE_PRIVATE__ */
